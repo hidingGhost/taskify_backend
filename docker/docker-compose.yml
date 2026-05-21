@@ -1,0 +1,39 @@
+version: '3.8'
+
+services:
+  # Datenbank
+  db:
+    image: postgres:15-alpine
+    container_name: taskify_db
+    environment:
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: taskify
+    ports:
+      - "5432:5432"
+    volumes:
+      - ./db-data:/var/lib/postgresql/data
+
+  # Go-Backend
+  backend:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile
+    container_name: taskify_backend
+    ports:
+      - "8080:8080"
+    environment:
+      - DB_URL=postgres://user:password@db:5432/taskify?sslmode=disable
+      - AI_ENDPOINT=http://llama-cpp:8081/completion
+    depends_on:
+      - db
+
+  # KI-Service (Platzhalter für llama.cpp)
+  llama-cpp:
+    image: ghcr.io/ggerganov/llama.cpp:server
+    container_name: taskify_ai
+    ports:
+      - "8081:8081"
+    volumes:
+      - ./models:/models
+    command: "-m /models/your-model-7b.gguf -c 2048 --host 0.0.0.0 --port 8081"
