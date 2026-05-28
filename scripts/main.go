@@ -67,3 +67,12 @@ func callAI(prompt string) (AIResponse, error) {
 	body, _ := io.ReadAll(resp.Body)
 	return AIResponse{Response: string(body)}, nil
 }
+
+/*
+var potreq = {
+	"answertype": "create, update, delete, UID (User Is Dumb also ein fehler wenn er nach ner atombombe fragt)",
+	"duedate": 09.01.2007,
+	"answertext"/ "summary" (answertext ist nur ne nachfrage, summary ist ne zusammenfassung welche als todo gespeichert wird)
+
+}
+*/
